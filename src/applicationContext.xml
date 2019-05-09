@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!--
+	
+	  Configuration of the CICS ECI connector in a non managed mode.
+	
+	-->
+
+	<bean id="eciManagedConnectionFactory"
+	 	  class="com.ibm.connector2.cics.ECIManagedConnectionFactory">
+		<property name="serverName"><value>TXSERIES</value></property>
+		<property name="connectionURL"><value>local:</value></property>
+		<property name="userName"><value>CICSUSER</value></property>
+		<property name="password"><value>CICS</value></property>
+	</bean>
+
+	<bean id="eciConnectionFactory"
+	      class="org.springframework.jca.support.LocalConnectionFactoryBean">
+		<property name="managedConnectionFactory">
+			<ref local="eciManagedConnectionFactory"/>
+		</property>
+	</bean>
+
+	<!--
+	
+	  Configuration of the DAO.
+	
+	-->
+
+	<bean id="customersCciEciDao" class="javaworld.jca.CustomersCciEciDaoImpl">
+		<property name="connectionFactory">
+			<ref local="eciConnectionFactory"/>
+		</property>
+	</bean>
+
+</beans>
